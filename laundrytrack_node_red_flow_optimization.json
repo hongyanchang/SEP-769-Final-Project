@@ -1,0 +1,121 @@
+[
+  {
+    "id": "flow1",
+    "type": "tab",
+    "label": "LaundryTrack Pro Dashboard",
+    "disabled": false
+  },
+  {
+    "id": "mqtt_broker1",
+    "type": "mqtt-broker",
+    "name": "Local Mosquitto",
+    "broker": "localhost",
+    "port": "1883"
+  },
+  {
+    "id": "ui_base",
+    "type": "ui-base",
+    "name": "Laundry UI",
+    "path": "/ui"
+  },
+  {
+    "id": "ui_page",
+    "type": "ui-page",
+    "name": "Dashboard",
+    "ui": "ui_base",
+    "path": "/laundry",
+    "layout": "grid"
+  },
+  {
+    "id": "group_main",
+    "type": "ui-group",
+    "name": "Machine Status",
+    "page": "ui_page",
+    "width": "6"
+  },
+  {
+    "id": "group_event",
+    "type": "ui-group",
+    "name": "Events",
+    "page": "ui_page",
+    "width": "6"
+  },
+  {
+    "id": "mqtt_status",
+    "type": "mqtt in",
+    "z": "flow1",
+    "topic": "laundry/machine1/status",
+    "broker": "mqtt_broker1",
+    "x": 120,
+    "y": 80,
+    "wires": [["json1"]]
+  },
+  {
+    "id": "json1",
+    "type": "json",
+    "z": "flow1",
+    "x": 300,
+    "y": 80,
+    "wires": [["format_status"]]
+  },
+  {
+    "id": "format_status",
+    "type": "function",
+    "z": "flow1",
+    "name": "Format Status",
+    "func": "let s = msg.payload.state;\nif(s==='RUNNING'){msg.payload='🔴 RUNNING';}else{msg.payload='🟢 IDLE';}\nreturn msg;",
+    "x": 480,
+    "y": 80,
+    "wires": [["ui_status"]]
+  },
+  {
+    "id": "ui_status",
+    "type": "ui-text",
+    "z": "flow1",
+    "group": "group_main",
+    "label": "Current State",
+    "format": "<h1 style='text-align:center'>{{msg.payload}}</h1>",
+    "x": 700,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "mqtt_event",
+    "type": "mqtt in",
+    "z": "flow1",
+    "topic": "laundry/machine1/event",
+    "broker": "mqtt_broker1",
+    "x": 120,
+    "y": 180,
+    "wires": [["json2"]]
+  },
+  {
+    "id": "json2",
+    "type": "json",
+    "z": "flow1",
+    "x": 300,
+    "y": 180,
+    "wires": [["format_event"]]
+  },
+  {
+    "id": "format_event",
+    "type": "function",
+    "z": "flow1",
+    "name": "Format Event",
+    "func": "msg.payload = `Event: ${msg.payload.event}\\nTime: ${msg.payload.time}`; return msg;",
+    "x": 480,
+    "y": 180,
+    "wires": [["ui_event"]]
+  },
+  {
+    "id": "ui_event",
+    "type": "ui-text",
+    "z": "flow1",
+    "group": "group_event",
+    "label": "Latest Event",
+    "format": "<pre style='font-size:16px'>{{msg.payload}}</pre>",
+    "x": 700,
+    "y": 180,
+    "wires": []
+  }
+]
