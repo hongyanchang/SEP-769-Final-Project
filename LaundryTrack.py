@@ -21,9 +21,9 @@ bus = smbus.SMBus(1)
 LED_PIN = 17
 
 # =========================
-# MQTT config (Mosquitto local broker)
+# MQTT config (Mosquitto public broker)
 # =========================
-BROKER = "localhost"
+BROKER = "broker.hivemq.com"
 PORT = 1883
 TOPIC_STATUS = "laundry/machine1/status"
 TOPIC_EVENT = "laundry/machine1/event"
