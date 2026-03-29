@@ -21,7 +21,7 @@ bus = smbus.SMBus(1)
 LED_PIN = 17
 
 # =========================
-# MQTT config (Mosquitto public broker)
+# MQTT config (HiveMQ public broker)
 # =========================
 BROKER = "broker.hivemq.com"
 PORT = 1883
